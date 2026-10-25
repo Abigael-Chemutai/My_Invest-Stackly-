@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stackly">
+<meta name="theme-color" content="#6C3CF0">
+<title>Stackly</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pur:#6C3CF0;--pink:#FF4F9A;--org:#FF9A3C;--yel:#FFD23F;--teal:#14C8B0;--blu:#3BA3FF;--grn:#22C55E;--red:#FF5A5F;
+--ink:#1B1340;--bg:#F6F3FF;--card:#fff;--muted:#6B6790;--line:#E4DFF5;--soft:#EFE9FF;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--ink:#F3EFFF;--bg:#120D2B;--card:#1E1745;--muted:#A9A3CC;--line:#322A5E;--soft:#2A2158;color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px}
+button,input,select{font:inherit;color:inherit}
+#app{max-width:440px;margin:0 auto;min-height:100vh;padding:calc(env(safe-area-inset-top,0px) + 18px) 16px calc(110px + env(safe-area-inset-bottom,0px))}
+h1{font-size:22px;margin:0}h2{font-size:16px;margin:0 0 10px}h3{font-size:14px;margin:0}
+.muted{color:var(--muted)}.small{font-size:12px}.center{text-align:center}.b{font-weight:700}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px}
+.back{border:0;background:var(--card);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(27,19,64,.1)}
+.avatar{width:38px;height:38px;border-radius:50%;border:0;background:var(--pink);color:#fff;font-weight:700;cursor:pointer}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 4px 18px rgba(27,19,64,.08)}
+.hero{background:linear-gradient(135deg,var(--pur),var(--blu));color:#fff;border-radius:24px;padding:18px 18px 8px;margin-bottom:14px;box-shadow:0 8px 24px rgba(108,60,240,.35)}
+.hero .total{font-size:32px;font-weight:700;margin:2px 0 8px}.op{opacity:.85}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;color:#fff}
+.pill.up{background:var(--grn)}.pill.down{background:var(--red)}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;margin:0 6px 6px 0}
+.chip.on{background:var(--pur);border-color:var(--pur);color:#fff}
+.chips{display:flex;flex-wrap:wrap}
+.btn{border:0;border-radius:99px;padding:13px 18px;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--pink),var(--org));cursor:pointer;width:100%;font-size:14px}
+.btn.pur{background:var(--pur)}.btn.ghost{background:transparent;color:var(--pur);border:1.8px solid var(--pur)}
+.btn.sm{width:auto;padding:9px 14px;font-size:12px}.btn.danger{background:transparent;color:var(--red);border:1.8px solid var(--red)}
+.row2{display:flex;gap:10px;margin-top:12px}.row2>*{flex:1}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.row:last-child{border-bottom:0}.row .g{flex:1;min-width:0}.row .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ico{width:38px;height:38px;border-radius:12px;color:#fff;font-weight:700;display:grid;place-items:center;flex:none}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+.tile{border:0;background:none;text-align:center;cursor:pointer;padding:0;font-size:11px;font-weight:600;color:var(--ink)}
+.tile .ico{width:100%;height:52px;font-size:20px;margin-bottom:4px;border-radius:16px}.tile.on .ico{outline:3px solid var(--ink);outline-offset:2px}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 4px}
+input,select{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);outline:none}
+input:focus,select:focus{border-color:var(--pur)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stats .card{margin:0;padding:12px 14px}.stats .v{font-weight:700;font-size:15px}
+.legend{flex:1;font-size:12px}.legend div{display:flex;align-items:center;gap:8px;padding:3px 0}.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.legend span:last-child{margin-left:auto;font-weight:700}
+.bar{height:9px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--grn));border-radius:9px}
+.banner{background:#D8F7F2;color:#0E7F72;border-radius:14px;padding:10px 14px;font-size:12px;font-weight:600;margin-bottom:14px}
+.warm{background:#FFF1B8;color:#3a2d00;border-radius:16px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+.rank{width:26px;height:26px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}.rank.g{background:var(--yel);color:#1B1340}
+.you{background:var(--soft);border-radius:14px;padding-left:8px;padding-right:8px}
+.streak{background:linear-gradient(135deg,var(--org),var(--pink));color:#fff;border-radius:20px;padding:16px;margin-bottom:14px}
+.streak .bar{background:rgba(255,255,255,.35)}.streak .bar i{background:#fff}
+details{background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:0 2px 10px rgba(27,19,64,.06)}
+summary{font-weight:600;cursor:pointer}details p{margin:8px 0 0;color:var(--muted);line-height:1.5}
+code{background:var(--soft);padding:2px 6px;border-radius:6px;font-size:12px}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px);max-width:416px;background:var(--card);border-radius:28px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;box-shadow:0 8px 28px rgba(27,19,64,.25);z-index:20}
+nav button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;cursor:pointer;padding:4px 8px}
+nav button.on{color:var(--pur)}nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav .fab{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--org));color:#fff;margin-top:-26px;box-shadow:0 6px 16px rgba(255,79,154,.5);justify-content:center;font-size:30px;font-weight:400;padding:0;line-height:1}
+.onb{background:linear-gradient(160deg,var(--pur),var(--pink));margin:calc(-18px - env(safe-area-inset-top,0px)) -16px -110px;padding:calc(env(safe-area-inset-top,0px) + 40px) 24px 40px;min-height:100vh;color:#fff}
+.onb input,.onb select{background:rgba(255,255,255,.95);color:#1B1340;border-color:transparent}
+.onb label.f{color:#EADFFF}.onb .chip{background:rgba(255,255,255,.2);border-color:transparent;color:#fff}.onb .chip.on{background:#fff;color:var(--pur)}
+.onb .btn{background:#fff;color:var(--pur)}.onb .btn.ghost{background:transparent;color:#fff;border-color:#fff}
+.ovl{position:fixed;inset:0;background:rgba(27,19,64,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet{background:var(--card);width:100%;max-width:440px;border-radius:26px 26px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0px));max-height:90vh;overflow:auto}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;font-size:13px;z-index:60}
+.cf{position:fixed;top:-14px;width:8px;height:12px;border-radius:2px;z-index:70;pointer-events:none;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.8}}
+@media (min-width:600px){body{background:linear-gradient(160deg,#6C3CF0 0%,#FF4F9A 100%) fixed}#app{background:var(--bg);margin:20px auto;border-radius:32px;min-height:calc(100vh - 40px)}nav{bottom:30px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ---------- constants ---------- */
+const TYPES={
+  'Stocks':{c:'#6C3CF0',l:'S',risk:4},'T-bills':{c:'#3BA3FF',l:'T',risk:1.5},'Funds':{c:'#14C8B0',l:'F',risk:3},
+  'ETFs':{c:'#22C55E',l:'E',risk:3},'Real estate':{c:'#FF4F9A',l:'R',risk:3},'Cash':{c:'#F5B800',l:'$',risk:1},
+  'Crypto':{c:'#FF9A3C',l:'C',risk:5},'Other':{c:'#9B6BFF',l:'+',risk:3.5}
+};
+const CURRENCIES=['GHS','USD','EUR','GBP','KES','NGN','ZAR'];
+const KEY='stackly.v1';
+const LEARN={
+ assets:[['Stocks (shares)','You own a small slice of a company. Value moves with company results and market mood. Some pay dividends.'],
+  ['Bonds and T-bills','You lend money to a government or company and get interest. T-bills are short-term government loans.'],
+  ['Mutual and unit trusts','A professional manager pools many investors\' money into a mix of assets. Fees apply.'],
+  ['ETFs and index funds','Funds that copy a market index. ETFs trade like shares. Low fees and instant diversification.'],
+  ['Real estate and land','Property, land or property funds. Can rise in value and earn rent, but is hard to sell fast and needs big sums.'],
+  ['Cash and money market','Savings accounts, money-market funds and cash. Very stable, but returns can lag behind inflation.'],
+  ['Crypto assets','Digital assets such as Bitcoin. Prices swing wildly and the rules are still evolving.'],
+  ['Commodities and others','Gold, farmland, private businesses or group savings such as susu. Each has its own rules and risks.']],
+ strategies:[['Dollar-cost averaging','Invest a fixed amount on a schedule (say monthly), whatever the price. Builds a habit. Does not guarantee profit.'],
+  ['Lump-sum investing','Invest a large amount in one go. Your money starts working immediately, but bad timing hurts.'],
+  ['Buy and hold','Buy quality assets and keep them for years, ignoring daily noise. Needs patience through big drops.'],
+  ['Index investing','Buy a fund that tracks a whole market instead of picking winners. You get the market return, good or bad.'],
+  ['Value investing','Look for assets priced below what they seem to be worth. Needs research. Cheap can stay cheap.'],
+  ['Growth investing','Back businesses that are growing fast. High upside, but can fall hard if growth slows.'],
+  ['Dividend and income','Hold assets that pay you regularly: dividends, interest or rent. Very high yields can signal trouble.'],
+  ['Diversification','Spread money across asset types, sectors and countries to match your goals and comfort with risk.'],
+  ['Rebalancing','Once or twice a year, return to your target mix: trim winners, top up laggards. May involve costs and taxes.']],
+ metrics:[['Gain / loss','Money made or lost so far: current value minus amount invested.'],
+  ['ROI','Return as a percentage of what you put in: (value - cost) / cost x 100.'],
+  ['CAGR','Smoothed yearly growth over several years: (end / start)^(1/years) - 1.'],
+  ['XIRR','Yearly return that respects the timing of each deposit. In Excel: =XIRR(values, dates).'],
+  ['Dividend yield','Yearly income as a percentage of the price.'],
+  ['Expense ratio','Yearly fund fee, taken from your money in the fund.'],
+  ['Volatility','How wildly the price swings. Higher means a bumpier ride.'],
+  ['Drawdown','Fall from a past peak to a low point.'],
+  ['Real return','Return after inflation (roughly return % minus inflation %).']]
+};
+const FRIENDS=[{n:'Efua',r:14.2,c:'#14C8B0'},{n:'Kofi',r:9.8,c:'#FF9A3C'},{n:'Yaw',r:-2.1,c:'#9B6BFF'}];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10)};
+const monthsAgo=n=>{const d=new Date();d.setDate(15);d.setMonth(d.getMonth()-n);return d.toISOString().slice(0,10)};
+const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)?n:NaN};
+const cur=()=>(S.user&&S.user.currency)||'GHS';
+const money=(n,sign)=>{const s=new Intl.NumberFormat('en-US',{style:'currency',currency:cur(),maximumFractionDigits:0}).format(Math.abs(n));return (n<0?'-':(sign&&n>0?'+':''))+s};
+const pct=n=>(n>0?'+':'')+n.toFixed(1)+'%';
+const pill=(n,t)=>`<span class="pill ${n>=0?'up':'down'}">${n>=0?'&#9650;':'&#9660;'} ${t}</span>`;
+const logo=(s=46)=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#fff"/><rect x="20" y="58" width="16" height="22" rx="5" fill="#6C3CF0"/><rect x="42" y="44" width="16" height="36" rx="5" fill="#FF4F9A"/><rect x="64" y="30" width="16" height="50" rx="5" fill="#FF9A3C"/><circle cx="72" cy="16" r="8" fill="#FFD23F"/></svg>`;
+const ic=n=>({home:'<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ pie:'<circle cx="12" cy="12" r="9"/><path d="M12 3v9h9"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5c2.3.7 3.5 2.7 3.5 5.5"/>',
+ book:'<path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12"/>'}[n]);
+
+/* ---------- state ---------- */
+let S=load();
+let ui={view:'home',sel:null,filter:'All',range:'All',form:{type:'Stocks',name:'',amount:'',date:'',value:''},modal:null,toast:'',
+ onb:{name:'',cur:'GHS',types:['Stocks','T-bills']}};
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return{user:null,holdings:[],goals:[],log:[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+function gen(days,v0,v1,seed){const pts=[],n=10;for(let i=0;i<=n;i++){const t=i/n,w=(i===0||i===n)?0:Math.sin(i*1.7+seed)*.025*v0;
+ pts.push({d:daysAgo(Math.round(days*(1-t))),v:Math.round(v0+(v1-v0)*t+w)})}return pts}
+function sample(){
+ const mk=(id,name,type,days,v0,v1,seed,div)=>({id,name,type,invested:v0,value:v1,start:daysAgo(days),dividends:div,history:gen(days,v0,v1,seed)});
+ S.holdings=[mk(1,'Global Index Fund','ETFs',420,10520,12480,1,140),mk(2,'Tech Growth Stocks','Stocks',300,8500,9600,2,90),
+  mk(3,'91-day T-bill','T-bills',200,7200,7500,3,300),mk(4,'Unit Trust Fund','Funds',380,6000,6400,4,60),
+  mk(5,'Bitcoin','Crypto',250,3500,4100,5,0),mk(6,'Money market','Cash',150,3100,3200,6,110)];
+ S.goals=[{id:1,name:'Emergency fund',target:10000,saved:7000,c:'#14C8B0'},{id:2,name:'Land plot',target:100000,saved:35000,c:'#FF4F9A'}];
+ S.log=[0,1,2,3].map(i=>({t:'buy',d:monthsAgo(i),h:1,a:500}));
+}
+
+/* ---------- calculations ---------- */
+function tot(){const hs=S.holdings,inv=hs.reduce((s,h)=>s+h.invested,0),val=hs.reduce((s,h)=>s+h.value,0);
+ return{inv,val,gain:val-inv,ret:inv?(val-inv)/inv*100:0}}
+const hret=h=>h.invested?(h.value-h.invested)/h.invested*100:0;
+function mix(){const m={};S.holdings.forEach(h=>m[h.type]=(m[h.type]||0)+h.value);const t=Object.values(m).reduce((a,b)=>a+b,0)||1;
+ return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({t:k,v,c:TYPES[k].c,p:v/t*100}))}
+function riskScore(){const t=S.holdings.reduce((s,h)=>s+h.value,0);return t?S.holdings.reduce((s,h)=>s+h.value*TYPES[h.type].risk,0)/t:0}
+function lastBefore(hist,d){let r=null;for(const p of hist){if(p.d<=d)r=p;else break}return r}
+function seriesFrom(hs,range){
+ if(!hs.length)return[];
+ const first=hs.map(h=>h.history[0].d).sort()[0];
+ let ds=[...new Set(hs.flatMap(h=>h.history.map(p=>p.d)))].sort();
+ if(range!=='All'){const d=new Date();d.setDate(d.getDate()-({'1W':7,'1M':30,'1Y':365}[range]));const cut=d.toISOString().slice(0,10);
+  ds=ds.filter(x=>x>=cut);if(cut>=first&&!ds.includes(cut))ds.unshift(cut)}
+ return ds.map(d=>hs.reduce((s,h)=>{const p=lastBefore(h.history,d);return s+(p?p.v:0)},0))}
+function snapshot(h){const t=today(),l=h.history[h.history.length-1];if(l&&l.d===t)l.v=h.value;else h.history.push({d:t,v:h.value})}
+function streak(){const m=new Set(S.log.filter(l=>l.t==='buy').map(l=>l.d.slice(0,7)));const d=new Date();d.setDate(1);
+ const key=x=>x.toISOString().slice(0,7);if(!m.has(key(d)))d.setMonth(d.getMonth()-1);let k=0;while(m.has(key(d))){k++;d.setMonth(d.getMonth()-1)}return k}
+function insight(){const m=mix();if(!m.length)return'';
+ if(m[0].p>50)return `${Math.round(m[0].p)}% of your money sits in one asset type (${m[0].t}).`;
+ return `Your money is spread across ${m.length} asset types. The biggest is ${m[0].t} at ${Math.round(m[0].p)}%.`}
+
+/* ---------- charts ---------- */
+function spark(vals,h,color,stroke){
+ if(vals.length<2)return `<div class="muted small" style="padding:18px 0">Update this investment over time to see a trend.</div>`;
+ const w=300,mn=Math.min(...vals),mx=Math.max(...vals),r=mx-mn||1;
+ const pts=vals.map((v,i)=>[i*w/(vals.length-1),h-5-((v-mn)/r)*(h-10)]);
+ const p=pts.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' ');
+ const id='g'+Math.random().toString(36).slice(2,8);
+ return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".4"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs><path d="${p} L${w} ${h} L0 ${h} Z" fill="url(#${id})"/><path d="${p}" fill="none" stroke="${color}" stroke-width="${stroke||2.5}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`}
+function donut(parts,size){
+ const tot=parts.reduce((s,p)=>s+p.v,0)||1,r=40,C=2*Math.PI*r;let off=0;
+ const seg=parts.map(p=>{const len=C*p.v/tot,s=`<circle cx="50" cy="50" r="${r}" fill="none" stroke="${p.c}" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 50 50)"/>`;off+=len;return s}).join('');
+ return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" role="img" aria-label="Asset mix"><circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--line)" stroke-width="16"/>${seg}</svg>`}
+function ring(p,c,size){const r=40,C=2*Math.PI*r,len=C*Math.min(p,100)/100;
+ return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--line)" stroke-width="14"/><circle cx="50" cy="50" r="${r}" fill="none" stroke="${c}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${len} ${C-len}" transform="rotate(-90 50 50)"/><text x="50" y="57" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">${Math.round(p)}%</text></svg>`}
+function arc(cx,cy,r,a0,a1){const p=a=>[cx+r*Math.cos(a*Math.PI/180),cy-r*Math.sin(a*Math.PI/180)],[x0,y0]=p(a0),[x1,y1]=p(a1);return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`}
+function gauge(score){
+ const a=180-(Math.max(1,Math.min(5,score))-1)/4*180,nx=60+38*Math.cos(a*Math.PI/180),ny=62-38*Math.sin(a*Math.PI/180);
+ const lab=score<2?'Low':score<3?'Moderate':score<4?'Moderate-high':'High';
+ return `<div class="center"><svg viewBox="0 0 120 74" width="200" role="img" aria-label="Risk mix: ${lab}"><path d="${arc(60,62,46,180,122)}" stroke="#22C55E" stroke-width="12" fill="none"/><path d="${arc(60,62,46,118,62)}" stroke="#FFD23F" stroke-width="12" fill="none"/><path d="${arc(60,62,46,58,0)}" stroke="#FF5A5F" stroke-width="12" fill="none"/><line x1="60" y1="62" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="62" r="5" fill="var(--ink)"/></svg><div class="b">${lab}</div></div>`}
+
+/* ---------- views ---------- */
+const hdr=(t,sub,right)=>`<div class="top"><div><h1>${t}</h1>${sub?`<div class="muted small">${sub}</div>`:''}</div>${right||''}</div>`;
+const backTop=(t)=>`<div class="top"><button class="back" data-a="nav" data-v="${ui.view==='detail'?'portfolio':'home'}" aria-label="Back">&#8592;</button><h3>${t}</h3><span style="width:36px"></span></div>`;
+const empty=()=>`<div class="card center"><h2>Nothing here yet</h2><p class="muted">Add your first investment. It takes about 20 seconds.</p><button class="btn" data-a="nav" data-v="add">Add investment</button></div>`;
+
+function viewOnb(){const o=ui.onb;
+ return `<div class="onb"><div class="center">${logo(64)}<h1 style="font-size:34px;margin-top:8px">Stackly</h1><p style="opacity:.9">Track every investment in one happy place.</p></div>
+ <label class="f">Your name</label><input data-o="name" value="${esc(o.name)}" placeholder="e.g. Ama" autocomplete="given-name">
+ <label class="f">I invest in...</label><div class="chips">${Object.keys(TYPES).map(t=>`<button class="chip ${o.types.includes(t)?'on':''}" data-a="onbtype" data-v="${t}">${t}</button>`).join('')}</div>
+ <label class="f">Currency</label><select data-o="cur">${CURRENCIES.map(c=>`<option ${c===o.cur?'selected':''}>${c}</option>`).join('')}</select>
+ <div style="margin-top:22px"><button class="btn" data-a="onbgo" data-v="fresh">Start fresh</button></div>
+ <div class="row2"><button class="btn ghost" data-a="onbgo" data-v="sample">Try with sample data</button></div>
+ <p class="small center" style="opacity:.85;margin-top:18px">Your data stays on this device. No bank login needed.</p></div>`}
+
+function viewHome(){
+ const n=S.holdings.length;
+ let h=hdr('Hi, '+esc(S.user.name||'there'),'Your money today',`<button class="avatar" data-a="settings" aria-label="Settings">${esc((S.user.name||'S')[0].toUpperCase())}</button>`);
+ if(!n)return h+empty();
+ const t=tot(),m=mix(),movers=[...S.holdings].sort((a,b)=>hret(b)-hret(a)).slice(0,3);
+ h+=`<div class="hero"><div class="small op">Total value</div><div class="total">${money(t.val)}</div>${pill(t.ret,pct(t.ret)+' overall')}<div style="margin:6px -18px 0">${spark(seriesFrom(S.holdings,'All'),64,'#fff',2.5)}</div></div>`;
+ h+=`<div class="card"><h2>My mix</h2><div style="display:flex;align-items:center;gap:14px">${donut(m,110)}<div class="legend">${m.map(x=>`<div><i class="dot" style="background:${x.c}"></i><span>${x.t}</span><span>${Math.round(x.p)}%</span></div>`).join('')}</div></div></div>`;
+ h+=`<div class="card"><h2>Top movers</h2>${movers.map(rowHtml).join('')}</div>`;
+ if(S.goals.length)h+=`<div class="card" data-a="nav" data-v="goals" style="cursor:pointer"><h2>Goals</h2>${S.goals.slice(0,2).map(g=>{const p=g.saved/g.target*100;return `<div class="small b">${esc(g.name)} <span class="muted" style="font-weight:400">${Math.round(p)}%</span></div><div class="bar"><i style="width:${Math.min(p,100)}%"></i></div>`}).join('')}<div class="small b" style="color:var(--pur)">See goals and insights &#8250;</div></div>`;
+ return h+`<div class="warm"><b>Heads up.</b> ${insight()}</div>`}
+
+function rowHtml(h){const T=TYPES[h.type];
+ return `<div class="row" data-a="open" data-v="${h.id}"><div class="ico" style="background:${T.c}">${T.l}</div><div class="g"><div class="nm">${esc(h.name)}</div><div class="muted small">${h.type}</div></div><div style="text-align:right"><div class="b">${money(h.value)}</div>${pill(hret(h),pct(hret(h)))}</div></div>`}
+
+function viewPortfolio(){
+ let h=hdr('Portfolio',S.holdings.length+' holdings');
+ const types=[...new Set(S.holdings.map(x=>x.type))];
+ if(!S.holdings.length)return h+empty();
+ h+=`<div class="chips">${['All',...types].map(t=>`<button class="chip ${ui.filter===t?'on':''}" data-a="filter" data-v="${t}">${t}</button>`).join('')}</div>`;
+ const list=S.holdings.filter(x=>ui.filter==='All'||x.type===ui.filter);
+ return h+`<div class="card">${list.map(rowHtml).join('')||'<p class="muted">No holdings of this type.</p>'}</div>`}
+
+function viewDetail(){
+ const h=S.holdings.find(x=>x.id===ui.sel);if(!h){ui.view='portfolio';return viewPortfolio()}
+ const g=h.value-h.invested,T=TYPES[h.type];
+ let s=backTop(esc(h.name));
+ s+=`<div class="b" style="font-size:30px">${money(h.value)}</div><div style="margin:4px 0 14px">${pill(g,pct(hret(h))+' since you bought')}</div>`;
+ s+=`<div class="card">${spark(seriesFrom([h],ui.range),110,T.c,2.5)}<div class="chips" style="margin-top:8px">${['1W','1M','1Y','All'].map(r=>`<button class="chip ${ui.range===r?'on':''}" data-a="range" data-v="${r}">${r}</button>`).join('')}</div></div>`;
+ s+=`<div class="stats"><div class="card"><div class="muted small">Invested</div><div class="v">${money(h.invested)}</div></div><div class="card"><div class="muted small">Gain</div><div class="v" style="color:var(--${g>=0?'grn':'red'})">${money(g,true)}</div></div><div class="card"><div class="muted small">Dividends</div><div class="v">${money(h.dividends||0)}</div></div><div class="card"><div class="muted small">Since</div><div class="v">${esc(h.start)}</div></div></div>`;
+ s+=`<div class="row2"><button class="btn pur" data-a="buy">Buy more</button><button class="btn ghost" data-a="sell">Sell</button></div>`;
+ s+=`<div class="row2"><button class="btn ghost sm" data-a="upd">Update value</button><button class="btn ghost sm" data-a="inc">Add income</button><button class="btn danger sm" data-a="del">Delete</button></div>`;
+ return s}
+
+function viewAdd(){const f=ui.form;if(!f.date)f.date=today();
+ return hdr('Add investment','What did you buy?')+
+ `<div class="tiles">${Object.entries(TYPES).map(([k,T])=>`<button class="tile ${f.type===k?'on':''}" data-a="pick" data-v="${k}"><div class="ico" style="background:${T.c}">${T.l}</div>${k}</button>`).join('')}</div>
+ <label class="f">Name</label><input data-f="name" value="${esc(f.name)}" placeholder="e.g. Global Index Fund">
+ <div class="row2"><div><label class="f">Amount invested (${cur()})</label><input data-f="amount" value="${esc(f.amount)}" inputmode="decimal" placeholder="2000"></div>
+ <div><label class="f">Date</label><input data-f="date" type="date" max="${today()}" value="${esc(f.date)}"></div></div>
+ <label class="f">Worth today (optional)</label><input data-f="value" value="${esc(f.value)}" inputmode="decimal" placeholder="Leave blank if same as invested">
+ <div class="center" style="margin:16px 0 10px"><span class="pill up" style="background:#D8F7E5;color:#0B7A3B">Takes about 20 seconds</span></div>
+ <button class="btn" data-a="saveNew">Save</button>`}
+
+function viewCircle(){
+ const rows=FRIENDS.map(f=>({...f,you:false}));
+ if(S.holdings.length)rows.push({n:'You',r:tot().ret,c:'#FF4F9A',you:true});
+ rows.sort((a,b)=>b.r-a.r);
+ const k=streak();
+ return hdr('Friends Circle','Weekend Investors (demo)')+
+ `<div class="banner">Only percentages are shown. Amounts always stay private.</div>
+ <div class="card">${rows.map((r,i)=>`<div class="row ${r.you?'you':''}" style="cursor:default"><div class="rank ${i===0?'g':''}">${i+1}</div><div class="ico" style="background:${r.c};width:32px;height:32px;border-radius:50%">${r.n[0]}</div><div class="g b">${r.n}</div>${pill(r.r,pct(r.r))}</div>`).join('')}</div>
+ <div class="streak"><div class="b">Monthly top-up streak</div><div class="bar"><i style="width:${Math.min(k/6*100,100)}%"></i></div><div class="small">${k} of 6 months${k>=6?' - amazing!':' - keep going!'}</div></div>
+ <p class="muted small">Friends shown here are sample data. Real friend invites need an online backend, such as Supabase or Firebase. Your own return is "since you started".</p>`}
+
+function viewLearn(){
+ const sec=(t,arr)=>`<h2 style="margin-top:14px">${t}</h2>`+arr.map(([a,b])=>`<details><summary>${a}</summary><p>${b}</p></details>`).join('');
+ return hdr('Learn','Plain-English investing basics')+sec('Asset types',LEARN.assets)+sec('Methods and strategies',LEARN.strategies)+sec('Numbers that matter',LEARN.metrics)+
+ `<div class="warm" style="margin-top:14px">Educational content only. This is not financial, legal or tax advice. Higher potential return usually comes with higher risk, and nothing is guaranteed.</div>`}
+
+function viewGoals(){
+ let s=backTop('Goals and insights');
+ s+=S.goals.length?`<div class="card">${S.goals.map(g=>{const p=g.saved/g.target*100;
+  return `<div class="row" data-a="goalAdd" data-v="${g.id}"><div>${ring(p,g.c,64)}</div><div class="g"><div class="nm">${esc(g.name)}</div><div class="muted small">${money(g.saved)} of ${money(g.target)}</div><div class="small b" style="color:var(--pur)">Tap to add savings</div></div></div>`}).join('')}</div>`:`<div class="card center"><p class="muted">No goals yet. Try an emergency fund first.</p></div>`;
+ s+=`<button class="btn pur" data-a="goalNew" style="margin-bottom:14px">New goal</button>`;
+ if(S.holdings.length){
+  s+=`<div class="card"><h2>Risk mix</h2>${gauge(riskScore())}<p class="muted small center">A simple view of how risky your mix of assets is. It describes your portfolio and is not advice.</p></div>`;
+  s+=`<div class="warm"><b>Heads up.</b> ${insight()}</div>`;
+  const b=S.log.filter(l=>l.t==='buy').map(l=>l.d).sort().pop();
+  s+=`<div class="card"><h2>Reminder</h2><p class="muted" style="margin:0">${b?'Last top-up: '+Math.max(0,Math.round((Date.now()-new Date(b))/864e5))+' days ago.':'No top-ups logged yet.'}</p></div>`}
+ return s}
+
+function navHtml(){const it=(v,i,l)=>`<button class="${(ui.view===v||(v==='portfolio'&&ui.view==='detail')||(v==='home'&&ui.view==='goals'))?'on':''}" data-a="nav" data-v="${v}"><svg viewBox="0 0 24 24" aria-hidden="true">${ic(i)}</svg>${l}</button>`;
+ return `<nav>${it('home','home','Home')}${it('portfolio','pie','Portfolio')}<button class="fab" data-a="nav" data-v="add" aria-label="Add investment">+</button>${it('circle','users','Circle')}${it('learn','book','Learn')}</nav>`}
+
+/* ---------- modal ---------- */
+function openModal(cfg){ui.modal=cfg;render()}
+function fieldHtml(f){return `<label class="f">${f.label}</label>`+(f.opts?`<select id="mf_${f.id}">${f.opts.map(o=>`<option ${o===f.value?'selected':''}>${o}</option>`).join('')}</select>`:`<input id="mf_${f.id}" value="${esc(f.value||'')}" ${f.num?'inputmode="decimal"':''} placeholder="${esc(f.ph||'')}">`)}
+function modalHtml(){const m=ui.modal;if(!m)return'';
+ return `<div class="ovl" data-ovl="1"><div class="sheet" role="dialog" aria-modal="true"><h2>${m.title}</h2>${(m.fields||[]).map(fieldHtml).join('')}${m.html||''}<div class="row2"><button class="btn ghost" data-a="mclose">Cancel</button><button class="btn" data-a="mok">${m.ok||'Save'}</button></div></div></div>`}
+
+/* ---------- render ---------- */
+function render(){
+ const app=$('#app');let h='';
+ if(!S.user)h=viewOnb();
+ else{h=({home:viewHome,portfolio:viewPortfolio,detail:viewDetail,add:viewAdd,circle:viewCircle,learn:viewLearn,goals:viewGoals}[ui.view]||viewHome)()+navHtml()}
+ app.innerHTML=h+modalHtml()+(ui.toast?`<div class="toast" role="status">${esc(ui.toast)}</div>`:'')}
+function toast(t){ui.toast=t;render();setTimeout(()=>{ui.toast='';render()},1800)}
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const cols=['#6C3CF0','#FF4F9A','#FF9A3C','#FFD23F','#14C8B0','#3BA3FF'];
+ for(let i=0;i<40;i++){const e=document.createElement('i');e.className='cf';e.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%6]};animation-delay:${Math.random()*.4}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),2300)}}
+function go(v){ui.view=v;ui.modal=null;window.scrollTo(0,0);render()}
+const curH=()=>S.holdings.find(x=>x.id===ui.sel);
+const mval=id=>{const e=document.getElementById('mf_'+id);return e?e.value:''};
+
+/* ---------- actions ---------- */
+const act={
+ nav:v=>{if(v==='add'){ui.form={type:'Stocks',name:'',amount:'',date:today(),value:''}}go(v)},
+ open:v=>{ui.sel=+v;ui.range='All';go('detail')},
+ filter:v=>{ui.filter=v;render()},
+ range:v=>{ui.range=v;render()},
+ pick:v=>{ui.form.type=v;render()},
+ onbtype:v=>{const t=ui.onb.types,i=t.indexOf(v);i>=0?t.splice(i,1):t.push(v);render()},
+ onbgo:v=>{S.user={name:ui.onb.name.trim(),currency:ui.onb.cur,types:ui.onb.types};if(v==='sample')sample();save();go('home')},
+ saveNew:()=>{const f=ui.form,a=num(f.amount);
+  if(!f.name.trim())return toast('Give it a name first');
+  if(!(a>0))return toast('Enter the amount you invested');
+  let val=f.value.trim()?num(f.value):a;if(!(val>=0))return toast('Check the worth today');
+  const id=Date.now(),hist=[{d:f.date||today(),v:a}];
+  if(val!==a&&(f.date||today())<today())hist.push({d:today(),v:val});
+  S.holdings.push({id,name:f.name.trim(),type:f.type,invested:a,value:val,start:f.date||today(),dividends:0,history:hist});
+  S.log.push({t:'buy',d:f.date||today(),h:id,a});save();ui.filter='All';go('home');confetti();toast('Saved!')},
+ buy:()=>openModal({title:'Buy more',ok:'Add',fields:[{id:'a',label:'Amount ('+cur()+')',num:1,ph:'500'}],onOk:()=>{
+  const a=num(mval('a'));if(!(a>0))return false;const h=curH();h.invested+=a;h.value+=a;snapshot(h);S.log.push({t:'buy',d:today(),h:h.id,a});save();toast('Added')}}),
+ sell:()=>openModal({title:'Sell',ok:'Sell',fields:[{id:'a',label:'Amount sold ('+cur()+')',num:1}],onOk:()=>{
+  const h=curH(),a=num(mval('a'));if(!(a>0)||a>h.value)return false;const r=a/h.value;h.invested*=(1-r);h.value-=a;snapshot(h);S.log.push({t:'sell',d:today(),h:h.id,a});save();toast('Sale recorded')}}),
+ upd:()=>openModal({title:'Update value',ok:'Update',fields:[{id:'a',label:'Worth today ('+cur()+')',num:1,value:String(Math.round(curH().value))}],onOk:()=>{
+  const v=num(mval('a'));if(!(v>=0))return false;const h=curH();h.value=v;snapshot(h);save();toast('Value updated')}}),
+ inc:()=>openModal({title:'Add income',ok:'Add',fields:[{id:'a',label:'Dividend or interest received ('+cur()+')',num:1}],onOk:()=>{
+  const a=num(mval('a'));if(!(a>0))return false;const h=curH();h.dividends=(h.dividends||0)+a;save();toast('Income added')}}),
+ del:()=>openModal({title:'Delete this investment?',ok:'Delete',html:'<p class="muted">This removes it from your portfolio on this device.</p>',onOk:()=>{
+  S.holdings=S.holdings.filter(x=>x.id!==ui.sel);save();ui.view='portfolio';toast('Deleted')}}),
+ goalNew:()=>openModal({title:'New goal',ok:'Create',fields:[{id:'n',label:'Goal name',ph:'Emergency fund'},{id:'t',label:'Target ('+cur()+')',num:1,ph:'10000'}],onOk:()=>{
+  const n=mval('n').trim(),t=num(mval('t'));if(!n||!(t>0))return false;
+  S.goals.push({id:Date.now(),name:n,target:t,saved:0,c:['#14C8B0','#FF4F9A','#FF9A3C','#3BA3FF','#6C3CF0'][S.goals.length%5]});save();toast('Goal created')}}),
+ goalAdd:v=>{const g=S.goals.find(x=>x.id==v);openModal({title:'Add to '+esc(g.name),ok:'Add',fields:[{id:'a',label:'Amount ('+cur()+')',num:1}],onOk:()=>{
+  const a=num(mval('a'));if(!(a>0))return false;const was=g.saved<g.target;g.saved+=a;save();if(was&&g.saved>=g.target){confetti();toast('Goal reached!')}else toast('Savings added')}})},
+ settings:()=>openModal({title:'Settings',ok:'Save',fields:[{id:'n',label:'Your name',value:S.user.name},{id:'c',label:'Currency',opts:CURRENCIES,value:S.user.currency}],
+  html:`<div class="row2"><button class="btn ghost sm" data-a="loadSample">Load sample data</button><button class="btn danger sm" data-a="erase">Erase all data</button></div><p class="muted small">Stackly is an educational tracker, not financial advice. Data is stored only on this device.</p>`,
+  onOk:()=>{S.user.name=mval('n').trim();S.user.currency=mval('c');save()}}),
+ loadSample:()=>{sample();save();ui.modal=null;go('home');toast('Sample data loaded')},
+ erase:()=>{if(confirm('Erase everything on this device?')){S={user:null,holdings:[],goals:[],log:[]};save();ui.modal=null;ui.view='home';render()}},
+ mclose:()=>{ui.modal=null;render()},
+ mok:()=>{const m=ui.modal;if(!m||!m.onOk)return act.mclose();const r=m.onOk();if(r===false)return toast('Please check what you entered');ui.modal=null;render()}
+};
+document.addEventListener('click',e=>{
+ if(e.target.dataset&&e.target.dataset.ovl!==undefined){act.mclose();return}
+ const el=e.target.closest('[data-a]');if(!el)return;const f=act[el.dataset.a];if(f)f(el.dataset.v,el)});
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.f)ui.form[t.dataset.f]=t.value;
+ if(t.dataset.o)ui.onb[t.dataset.o]=t.value});
+
+/* ---------- start + iPhone icon ---------- */
+render();
+try{const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="#fff"/><rect x="20" y="58" width="16" height="22" rx="5" fill="#6C3CF0"/><rect x="42" y="44" width="16" height="36" rx="5" fill="#FF4F9A"/><rect x="64" y="30" width="16" height="50" rx="5" fill="#FF9A3C"/><circle cx="72" cy="16" r="8" fill="#FFD23F"/></svg>`;
+ const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=180;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,180,180);
+  g.addColorStop(0,'#6C3CF0');g.addColorStop(1,'#FF4F9A');x.fillStyle=g;x.fillRect(0,0,180,180);x.drawImage(img,32,32,116,116);
+  const l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL('image/png');document.head.appendChild(l)};
+ img.src='data:image/svg+xml;utf8,'+encodeURIComponent(svg)}catch(e){}
+</script>
+</body>
+</html>
